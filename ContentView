@@ -1,0 +1,133 @@
+import SwiftUI
+
+struct ContentView: View {
+    @State private var moves = ["🗿", "📄", "✂️"]
+    @State private var numbers = 0
+    @State private var winningMove = Int.random(in: 0...2)
+    @State private var winLose = Bool.random()
+    @State private var score = 0
+    @State private var alert = false
+    @State private var alertTitle = ""
+    @State private var questionCount = 0
+    
+    var body: some View {
+        ZStack {
+            LinearGradient(colors: [.blue, .red], startPoint: .top, endPoint: .bottom)
+                .ignoresSafeArea()
+            
+            VStack {
+                VStack {
+                Text("Rock, Paper, Scissors!")
+                    .font(.title.bold())
+                    .padding()
+                    Text("Computer chose \(moves[winningMove])")
+                Text(winLose == true ? "Select the move that wins!" : "Select the move that loses!")
+                Text("Score: \(score)")
+                }
+                    .font(.subheadline.bold())
+                Spacer()
+                    
+                
+                HStack {
+                ForEach(0..<3) { number in
+                    Button() {
+                        numbers = number
+                        alert = true
+                        questionCount += 1
+                        selectedChoice()
+                        reset()
+                    } label: {
+                        Text(moves[number])
+                            .font(.system(size: 200))
+                    }
+                }
+                }
+                Spacer()
+                    .alert(alertTitle, isPresented: $alert) {
+                        Button("Continue") {
+                            winningMove = Int.random(in: 0...2)
+                            winLose = Bool.random()
+                            if questionCount == 11 {
+                                score = 0
+                                questionCount = 0
+                            } 
+                        }
+                    } message: {
+                        Text("Your score is \(score)")
+                    }
+                }
+            }
+        }
+    
+    func selectedChoice() {
+        if winLose == true {
+            if winningMove == 0 {
+                if numbers == 1 {
+                    score += 1
+                    alertTitle = "Correct"
+                } else {
+                    score -= 1
+                    alertTitle = "Wrong"
+                }
+            }
+            
+            if winningMove == 1 {
+                if numbers == 2 {
+                    score += 1
+                    alertTitle = "Correct"
+                } else {
+                    score -= 1
+                    alertTitle = "Wrong"
+                }
+            }
+            
+            if winningMove == 2 {
+                if numbers == 0 {
+                    score += 1
+                    alertTitle = "Correct"
+                } else {
+                    score -= 1
+                    alertTitle = "Wrong"
+                }
+            }
+        }
+        
+        if winLose == false {
+            if winningMove == 0 {
+                if numbers == 2 {
+                    score += 1
+                    alertTitle = "Correct"
+                } else {
+                    score -= 1
+                    alertTitle = "Wrong"
+                }
+            }
+                
+                if winningMove == 1 {
+                    if numbers == 0 {
+                        score += 1
+                        alertTitle = "Correct"
+                    } else {
+                        score -= 1
+                        alertTitle = "Wrong"
+                    }
+                }
+                
+                if winningMove == 2 {
+                    if numbers == 1 {
+                        score += 1
+                        alertTitle = "Correct"
+                    } else {
+                        score -= 1
+                        alertTitle = "Wrong"
+                    }
+                }
+            }
+    }
+    
+    func reset() {
+        if questionCount == 11 {
+            alertTitle = "Game Over"
+        }
+    }
+}
